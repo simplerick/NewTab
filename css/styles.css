@@ -19,7 +19,7 @@ $l: 110px;
   flex-direction: row;
   align-items: stretch;
   overflow: hidden;
-  background-image: url("../img/sylvain.png");
+  background-image: url("../img/room.png");
 
   /*background-image: -webkit-radial-gradient(4% 2%, ellipse farthest-corner,rgb(71, 225, 161) 6.5%,rgb(71, 141, 235) 53.1%,rgb(255, 152, 152) 94.5%);*/
   background-size: cover;
