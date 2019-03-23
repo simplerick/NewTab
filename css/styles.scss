@@ -4,12 +4,12 @@ src: url('../font/Roboto-Light.ttf');
 }
 
 
-$bg_image: "../img/road.jpg";
+$bg_image: "../img/room.png";
 $bg_color: transparent;
-$menu_bg_color: rgba(black, 0.3);
-$text_color: #A6ADB0;
+$menu_bg_color: rgba(#021831, 0.35);
+$text_color: #E5E9E2;
 $text_bg_color: rgba(black, 0.8);
-$text_color_header: white; 
+$text_color_header: white;
 $text_color_hover: white;
 $text_color_active: black;
 $text_color_selection: white;
@@ -46,7 +46,7 @@ $l: 110px;
   overflow: hidden;
 
   background-image: url($bg_image);
-  background-size: cover; 
+  background-size: cover;
   background-position: center;
 }
 
@@ -58,19 +58,19 @@ $l: 110px;
   align-content: space-evenly;
   justify-content: space-evenly; /* or space-between or space-evenly or space-around */
   overflow: hidden;
-  transition: flex 0.5s; 
+  transition: flex 0.5s;
 }
 
 
 .menu {
   flex: 0 0 0%;
   overflow-y: hidden;
-  overflow-x: hidden; 
+  overflow-x: hidden;
   transition: flex 0.5s;
   position: relative;
   background-color: $menu_bg_color;
   backdrop-filter: blur(7px);
-  
+
   font-family: 'Roboto', sans-serif;
 
   div.header {
@@ -97,7 +97,7 @@ $l: 110px;
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    overflow-x: hidden; 
+    overflow-x: hidden;
     text-align: initial;
     div {
       flex: 0 0 60px;
@@ -128,7 +128,7 @@ $l: 110px;
     transition-delay: 0.05s;
     &:hover {
       color: $text_color_hover;
-      text-shadow: 0px 0px 5px rgba($text_color, 0.8);
+      text-shadow: 0px 0px 5px rgba($text_color_hover, 0.8);
       transition-delay: 0s;
     }
     &:active {
@@ -159,7 +159,7 @@ $l: 110px;
     .plus-btn {
       opacity: 1;
       transition: opacity 2s;
-      transition-delay: 0.5s;      
+      transition-delay: 0.5s;
     }
   }
 }
@@ -177,7 +177,7 @@ figure.item {
   text-shadow: none;
   position: relative;
   -webkit-user-select: none;
-  
+
   div.point {
     position: absolute;
     left: calc(50% - 2px);
@@ -243,7 +243,7 @@ cx-menu > * {
     box-sizing: border-box;
     display: block;
     border: 0px;
-    font: inherit;  
+    font: inherit;
     font-size: 16px;
     background: transparent;
     color: $caption_color;
@@ -253,7 +253,7 @@ cx-menu > * {
     &:hover {
       color: $text_color_hover;
       text-shadow: 0px 0px 5px rgba($text_color, 0.8);
-      background-color: $bg_color_selection; 
+      background-color: $bg_color_selection;
       transition-delay: 0s;
     }
 }
@@ -268,15 +268,15 @@ cx-menu > * {
     /*-webkit-box-shadow: inset 0 0 4px $scroll_track_color; */
     border-radius: 5px;
 }
- 
+
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background-color: $scroll_thumb_color; 
+    background-color: $scroll_thumb_color;
 }
 
 
 ::-webkit-scrollbar-thumb:hover {
-  background: $scroll_thumb_color_h; 
+  background: $scroll_thumb_color_h;
 }
 
 
@@ -305,24 +305,24 @@ cx-menu > * {
     transition-delay: 0.5s;
   }
   .r1{
-    transform: translateX(-50%)translateY(-50%)rotate(-45deg);   
+    transform: translateX(-50%)translateY(-50%)rotate(-45deg);
   }
   .r2{
     transform: translateX(-50%)translateY(-50%)rotate(45deg);
   }
-  
+
   &:hover{
       background: $xcircle_color_hover;
     div{
       background: $x_color_hover;
-      /*backdrop-filter: opacity(0%) for transparency in the circle in the form of a cross  */ 
+      /*backdrop-filter: opacity(0%) for transparency in the circle in the form of a cross  */
     }
   }
   &:active{
       box-shadow: none;
       transition-delay: 0s;
   }
-} 
+}
 
 
 
@@ -333,7 +333,7 @@ cx-menu > * {
 
 @keyframes appearance {
   0% { opacity: 0; }
-  100% { opacity: 1; }  
+  100% { opacity: 1; }
 }
 
 
@@ -365,4 +365,3 @@ div.list-animation {
 .blur {
   animation: blur 0.4s 1;
 }*/
-
