@@ -36,12 +36,14 @@ var ListAnimation = true;
 var LightSpot = false;
 // var BlurAnimation = true; Add later (see last in styles.scss)
 
+
 function Transition(Bookmark){
 	return function ()
 	{
 		chrome.tabs.update(null, {url: Bookmark.url });
 	}
 }
+
 
 function OpenMenu(Bookmark){
 	return function() {
@@ -66,6 +68,11 @@ function OpenMenu(Bookmark){
 }
 
 
+function DrawContextMenu(e) {
+	$("cx-menu").css("visibility", "visible");
+	$("cx-menu").css({left:e.pageX, top:e.pageY});
+	var i = ($(e.target).parent()).attr("id");
+}
 
 
 
@@ -77,14 +84,7 @@ function CreateHtml(Tree) {
 	var d1 = a*w/c1;
 	var l = Math.ceil(Math.sqrt(k*d1*h/c2));
 
-function DrawContextMenu(e) {
-	$("cx-menu").css("visibility", "visible");
-	$("cx-menu").css({left:e.pageX, top:e.pageY});
-	var i = ($(e.target).parent()).attr("id");
-	$("cx-menu").append("<button role='menuitem'>"+"Lorem Ipsum"+"</menuitem>");
-	$("cx-menu").append("<button role='menuitem'>"+"Create shortcuts..."+"</menuitem>");
-
-}
+	$("cx-menu").load("context_menu.html");
 
 	if (Number(0.2*l)<minfs) { Caption = false; }
 
