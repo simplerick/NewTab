@@ -68,11 +68,7 @@ function OpenMenu(Bookmark){
 }
 
 
-function DrawContextMenu(e) {
-	$("cx-menu").css("visibility", "visible");
-	$("cx-menu").css({left:e.pageX, top:e.pageY});
-	var i = ($(e.target).parent()).attr("id");
-}
+
 
 
 
@@ -84,7 +80,6 @@ function CreateHtml(Tree) {
 	var d1 = a*w/c1;
 	var l = Math.ceil(Math.sqrt(k*d1*h/c2));
 
-	$("cx-menu").load("context_menu.html");
 
 	if (Number(0.2*l)<minfs) { Caption = false; }
 
@@ -93,20 +88,16 @@ function CreateHtml(Tree) {
 			var str = "<figure class='item' id = '"+i+"'> <img class='bookmark' src='icon/"+ (new URL(Bookmarks[i].url)).hostname +".svg' title ='"+ Bookmarks[i].title +"'></figure>";
 			$("div.container").append(str);
 			$("#"+i).click(Transition(Bookmarks[i]));
-			$("#"+i).bind("contextmenu", function(e) {
-				DrawContextMenu(e);
-				e.preventDefault();
-			});
 		}
 		else {
 			var str = "<figure class='item' id = '"+i+"'> <img class='folder' src='icon/"+ Bookmarks[i].title +".svg' title ='"+ Bookmarks[i].title +"'>"+ (LightSpot ? "<div class = 'point'></div>" : "") + "</figure>";
 			$("div.container").append(str);
 			$("#"+i).click(OpenMenu(Bookmarks[i]));
-			$("#"+i).bind("contextmenu", function(e) {
-				DrawContextMenu(e);
-				e.preventDefault();
-			});
 		}
+		$("#"+i).bind("contextmenu", function(e) {
+			DrawContextMenu(e);
+			e.preventDefault();
+		});
 	}
 
 	if(Caption) {
@@ -173,7 +164,6 @@ function CreateHtml(Tree) {
 	if (ListAnimation) {
 		$("div.menu > div.list").addClass("list-animation");
 	}
-
 }
 
 

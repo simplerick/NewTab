@@ -95,7 +95,7 @@ $l: 110px;
       text-shadow: none; }
     .menu a::selection {
       color: white;
-      background-color: #631890; }
+      background-color: rgba(0, 0, 0, 0.8); }
 
 .menu-open .container {
   flex: 0 0 70%; }
@@ -182,7 +182,7 @@ cx-menu > * {
   cx-menu > *:hover {
     color: white;
     text-shadow: 0px 0px 5px rgba(229, 233, 226, 0.8);
-    background-color: #631890;
+    background-color: rgba(0, 0, 0, 0.8);
     transition-delay: 0s; }
 
 ::-webkit-scrollbar {
