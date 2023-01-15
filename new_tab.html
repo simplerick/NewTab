@@ -6,13 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Tab</title>
     <link rel="stylesheet" href="css/styles.css">
-    
 </head>
 
 <body class="window">
-    <div class="container"></div>
-    <cx-menu type="context" role="menu"></cx-menu>
-    <div class="menu"><div class='plus-btn'><div class='r1'></div><div class='r2'></div></div> <div class="header"></div> <div class='list' id ='list'></div> </div>
+<div class="container"></div>
+<cx-menu type="context" role="menu"></cx-menu>
+<div class="menu" id="side-menu">
+    <div class='plus-btn'>
+        <div class='r1'></div>
+        <div class='r2'></div>
+    </div>
+    <div class="header">
+        <h id="side-menu-title"></h>
+    </div>
+    <div class='list' id='list'></div>
+    <template id="list-item-template">
+        <div class="list-item">
+            <img alt="" src="">
+            <p>
+                <a></a>
+            </p>
+        </div>
+    </template>
+</div>
 </body>
 
 <script src="js/jquery-3.2.1.min.js"></script>

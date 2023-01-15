@@ -18,23 +18,25 @@ maxfs - max font size,
 
 Calculations and ideas:
 d1*c1 = a*w, d2*c2 = h, c1*c2 > N.
-Want: d1 ~ d2 in menu-open state ==> d1=d2=d; (d1<=d2) ==> c1 = min integral > sqrt(Naw/h), c2 = min integral > N/c1.
+Want: d1 ~ d2 in menu-open state ==> d1=d2=d; (d1<=d2) ==> c1 = min integer > sqrt(Naw/h), c2 = min integer > N/c1.
 l^2 = k*d1*d2=k*a*w*h/c1/c2.
  */
 
 
-var w = $("body").width(); //1366
-var h = $("body").height();
-var a = 0.72;
-var k = 0.15;
-var minfs = 13;
-var maxfs = 15;
-var GridAnimation = true;
-var Caption = false;
-var BgCaption = true;
-var ListAnimation = true;
-var LightSpot = false;
-// var BlurAnimation = true; Add later (see last in styles.scss)
+// var w = $("body").width(); //1366
+// var h = $("body").height();
+let w = document.body.clientWidth;
+let h = document.body.clientHeight;
+let a = 0.72;
+let k = 0.15;
+let minfs = 13;
+let maxfs = 15;
+let GridAnimation = true; // increase icon on hover
+let Caption = true; // presence of captions
+let BgCaption = true; // background of caption
+let ListAnimation = true; // draw list items in the side menu gradually
+let LightSpot = true; // highlight folder icons
+// let BlurAnimation = true; Add later (see last in styles.scss)
 
 
 function Transition(Bookmark){
@@ -45,35 +47,47 @@ function Transition(Bookmark){
 }
 
 
-function OpenMenu(Bookmark){
-	return function() {
-		if(!$("body").hasClass("menu-open")){
-			$("body.window").addClass("menu-open");
-		} else {
-			$("div.menu > div.header > h, div.menu > div.list > div").detach();
-		}
-		$("div.menu > div.header").append("<h>"+Bookmark.title+"</h>");
-		if (ListAnimation) {
-			for(i = 0; i < Bookmark.children.length; i++) {
-				$("div.menu > div.list").append("<div class = 'favicon'> <img  src='chrome://favicon/size/16@1x/"+ Bookmark.children[i].url +"'> <p><a href='"+ Bookmark.children[i].url+"'>" + Bookmark.children[i].title + "</a></p> </div>");
-				$("div.list-animation > div:nth-child("+(i+1)+")").css("animation-delay", (i+1)/10 +"s");
-			}
-		} else {
-			for(i = 0; i < Bookmark.children.length; i++) {
-				$("div.menu > div.list").append("<div class = 'favicon'> <img  src='chrome://favicon/size/16@1x/"+ Bookmark.children[i].url +"'> <p><a href='"+ Bookmark.children[i].url+"'>" + Bookmark.children[i].title + "</a></p> </div>");
-			}
-		}
+function CreateList(Bookmark) {
+	/**
+	 * Create list of bookmarks in the side menu.
+	 */
+	// for each nested bookmark create a list item
+	let template = document.getElementById("list-item-template");
+	document.getElementById("side-menu-title").innerHTML = Bookmark.title;
+	Bookmark.children.forEach((child) => {
+		let new_item = template.content.cloneNode(true);
+		new_item.querySelector(".list-item > img").src = `chrome://favicon/size/16@1x/${child.url}`;
+		let a = new_item.querySelector(".list-item > p > a");
+		a.innerHTML = child.title;
+		a.href = child.url;
+		document.getElementById("list").append(new_item);
+	});
+}
 
+
+function ToggleMenu(Bookmark){
+	/**
+	 * Toggle side menu. If bookmark is passed, open side menu, add header and list of it's nested bookmarks.
+	 * Otherwise, clear content and close side menu.
+	 */
+	return function() {
+		if(document.body.classList.contains("menu-open") || Bookmark === undefined){
+			document.getElementById("side-menu-title").innerHTML = "";
+			document.getElementById("list").innerHTML = "";
+			document.getElementById("list").scrollTop = 0;
+		}
+		if(Bookmark){
+			document.body.classList.add("menu-open");
+			CreateList(Bookmark);
+		} else {
+			document.body.classList.remove("menu-open");
+		}
 	}
 }
 
 
-
-
-
-
 function CreateHtml(Tree) {
-	var Bookmarks = Tree[0].children[0].children;
+	let Bookmarks = Tree[0].children[0].children;
 	var N = Bookmarks.length;
 	var c1 = Math.ceil(Math.sqrt(a*w*N/h));
 	var c2 = Math.ceil(N/c1);
@@ -92,7 +106,7 @@ function CreateHtml(Tree) {
 		else {
 			var str = "<figure class='item' id = '"+i+"'> <img class='folder' src='icon/"+ Bookmarks[i].title +".svg' title ='"+ Bookmarks[i].title +"'>"+ (LightSpot ? "<div class = 'point'></div>" : "") + "</figure>";
 			$("div.container").append(str);
-			$("#"+i).click(OpenMenu(Bookmarks[i]));
+			$("#"+i).click(ToggleMenu(Bookmarks[i]));
 		}
 		$("#"+i).bind("contextmenu", function(e) {
 			DrawContextMenu(e);
@@ -122,8 +136,7 @@ function CreateHtml(Tree) {
 
 	$("body").click(function (e) {
 		if ($(e.target).is("div.container") || $(e.target).is("body.window")) {
-			$("div.menu > div.header > h, div.menu > div.list > div").detach();
-			$("body.window").removeClass("menu-open");
+			ToggleMenu()();
 		}
 		if (!$(e.target).is("cx-menu"))
 			$("cx-menu").css("visibility", "hidden");
