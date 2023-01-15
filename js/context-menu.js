@@ -8,7 +8,7 @@ function DrawContextMenu(e) {
 
 
 function Rename(e){
-	alert('rf');
+	console.log('rf');
 }
 
 

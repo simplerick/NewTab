@@ -1,30 +1,35 @@
 {
 	"manifest_version": 2,
-
 	"name": "NewTab",	
 	"version": "1.2.1",
 
-	
 	"permissions": [
         "bookmarks",
         "chrome://favicon/*",
         "storage",
-        "contextMenus"
+        "contextMenus",
+		"activeTab",
+		"storage",
+		"unlimitedStorage",
+		"background"
     ],
 
-	
 	"chrome_url_overrides" : {
 		"newtab": "new_tab.html"
 	},
 
 	"browser_action": {
-		"default_icon": "icon/default/extension19.png",
+		"default_icon": {
+		"16": "icon/default/extension19.png",
+		"48": "icon/default/extension128.png",
+		"128": "icon/default/extension128.png"
+		},
 		"default_title": "Override new tab by custom html with bookmarks."
 	},
 
-
-	"icons": { "16": "icon/default/extension19.png",
-          "48": "icon/default/extension128.png",
-          "128": "icon/default/extension128.png" }
-
+	"icons": {
+		"16": "icon/default/extension19.png",
+		"48": "icon/default/extension128.png",
+		"128": "icon/default/extension128.png"
+	}
 }

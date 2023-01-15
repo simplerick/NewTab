@@ -34,8 +34,8 @@ let maxfs = 15;
 let GridAnimation = true; // increase icon on hover
 let Caption = true; // presence of captions
 let BgCaption = true; // background of caption
-let ListAnimation = true; // draw list items in the side menu gradually
-let LightSpot = true; // highlight folder icons
+let ListAnimation = false; // draw list items in the side menu gradually
+let LightSpot = false; // highlight folder icons
 // let BlurAnimation = true; Add later (see last in styles.scss)
 
 
@@ -86,53 +86,45 @@ function ToggleMenu(Bookmark){
 }
 
 
+function CreateGrid(Bookmarks){
+	let template = document.getElementById("grid-item-template");
+	Bookmarks.forEach((Bookmark) => {
+		let figure = template.content.cloneNode(true).querySelector("figure");
+		let img = figure.querySelector("img");
+		img.title = Bookmark.title;
+		if(Bookmark.children) {
+			img.src = `icon/${Bookmark.title}.svg`
+			img.onerror = () => {img.src = "icon/default/folder.svg"};
+			img.class = "folder";
+			figure.onclick = ToggleMenu(Bookmark);
+		} else {
+			img.src = `icon/${(new URL(Bookmark.url)).hostname}.svg`;
+			img.onerror = () => {img.src = "icon/default/bookmark.svg"};
+			img.class = "bookmark";
+			figure.onclick = Transition(Bookmark);
+		}
+		figure.oncontextmenu = (e) => {
+			e.preventDefault();
+			DrawContextMenu(e);
+		};
+		figure.querySelector("figcaption").innerHTML = Bookmark.title;
+		document.getElementById("grid").append(figure);
+	});
+}
+
+
 function CreateHtml(Tree) {
 	let Bookmarks = Tree[0].children[0].children;
-	var N = Bookmarks.length;
-	var c1 = Math.ceil(Math.sqrt(a*w*N/h));
-	var c2 = Math.ceil(N/c1);
-	var d1 = a*w/c1;
-	var l = Math.ceil(Math.sqrt(k*d1*h/c2));
+	let N = Bookmarks.length;
+	let c1 = Math.ceil(Math.sqrt(a*w*N/h));
+	let c2 = Math.ceil(N/c1);
+	let d1 = a*w/c1;
+	let l = Math.ceil(Math.sqrt(k*d1*h/c2));
 
+	SetStyles(l, Caption, LightSpot, BgCaption, ListAnimation);
+	CreateGrid(Bookmarks);
 
-	if (Number(0.2*l)<minfs) { Caption = false; }
-
-	for (i = 0;  i < N; i++) {
-		if(!Bookmarks[i].children) {
-			var str = "<figure class='item' id = '"+i+"'> <img class='bookmark' src='icon/"+ (new URL(Bookmarks[i].url)).hostname +".svg' title ='"+ Bookmarks[i].title +"'></figure>";
-			$("div.container").append(str);
-			$("#"+i).click(Transition(Bookmarks[i]));
-		}
-		else {
-			var str = "<figure class='item' id = '"+i+"'> <img class='folder' src='icon/"+ Bookmarks[i].title +".svg' title ='"+ Bookmarks[i].title +"'>"+ (LightSpot ? "<div class = 'point'></div>" : "") + "</figure>";
-			$("div.container").append(str);
-			$("#"+i).click(ToggleMenu(Bookmarks[i]));
-		}
-		$("#"+i).bind("contextmenu", function(e) {
-			DrawContextMenu(e);
-			e.preventDefault();
-		});
-	}
-
-	if(Caption) {
-		for (i = 0;  i < N; i++) {
-			$("figure#"+i).append("<figcaption>"+ Bookmarks[i].title +"</figcaption>");
-			$("figcaption").css("width", 0.7*d1);  // properties of caption
-			$("figcaption").css("font-size", (Number(0.2*l) > maxfs) ? maxfs : (0.2*l));
-		}
-	}
-
-
-	$("img.bookmark").on("error", ( function() { $(this).attr("src", "icon/default/bookmark.svg");})); // default icons in the case where there are no personal
-	$("img.folder").on("error", ( function() { $(this).attr("src", "icon/default/folder.svg");}));
-
-	$("figure.item > img").css("width", l); // assigns size of icons
-	$("figure.item > img").css("height", l);
-
-	$(".plus-btn").click(function () {
-		$("div.menu > div.header > h, div.menu > div.list > div").detach();
-		$("body.window").removeClass("menu-open");
-	});
+	document.querySelector("#side-menu > .plus-btn").onclick = ToggleMenu();
 
 	$("body").click(function (e) {
 		if ($(e.target).is("div.container") || $(e.target).is("body.window")) {
@@ -141,10 +133,6 @@ function CreateHtml(Tree) {
 		if (!$(e.target).is("cx-menu"))
 			$("cx-menu").css("visibility", "hidden");
 	});
-
-
-
-
 
 	if (GridAnimation) {
 	$(".container").css("grid-template-columns", "repeat("+c1+",1fr)"); // grid properties
@@ -168,20 +156,30 @@ function CreateHtml(Tree) {
 	$(".container").css("grid-template-columns", "repeat("+c1+", auto)"); // grid properties
 	$(".container").css("grid-template-rows", "repeat("+c2+", auto)");
 	}
+}
 
 
-	if (BgCaption && Caption) {
-		$("figure.item > figcaption").addClass("caption_bg")
+function SetStyles(size, Caption, LightSpot, BgCaption, ListAnimation, BlurAnimation) {
+	let grid_item = document.getElementById("grid-item-template").content.querySelector("figure");
+	let grid_icon = grid_item.querySelector("img");
+	grid_icon.style.width = size + "px";
+	grid_icon.style.height = size + "px";
+	if(Caption && Number(0.2 * size)>minfs) {
+		let caption = grid_item.querySelector("figcaption");
+		caption.classList.remove("hidden");
+		if (BgCaption) {
+			caption.classList.add("caption_bg");
+		}
 	}
-
-	if (ListAnimation) {
-		$("div.menu > div.list").addClass("list-animation");
+	if(LightSpot) {
+		grid_item.querySelector(".point").classList.remove("hidden");
+	}
+	if(ListAnimation) {
+		document.querySelector("div.menu > div.list").classList.add("list-animation");
 	}
 }
 
 
 
-
-
-
 chrome.bookmarks.getTree(CreateHtml);
+chrome.bookmarks.onChanged.addListener(() => {chrome.bookmarks.getTree(CreateHtml);});

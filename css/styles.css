@@ -301,6 +301,9 @@
  div.list-animation div:nth-child(10) {
 	 animation-delay: 0.36s;
 }
+ .hidden {
+	 display: none;
+}
 /*@keyframes backdrop-blur {
 	 0% {
 		 backdrop-filter: blur(0px);

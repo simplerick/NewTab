@@ -9,7 +9,16 @@
 </head>
 
 <body class="window">
-<div class="container"></div>
+<div class="container" id="grid"></div>
+
+<template id="grid-item-template">
+    <figure class='item'>
+        <img src=''>
+        <div class="point, hidden"></div>
+        <figcaption class="hidden"></figcaption>
+    </figure>
+</template>
+
 <cx-menu type="context" role="menu"></cx-menu>
 <div class="menu" id="side-menu">
     <div class='plus-btn'>
@@ -20,6 +29,7 @@
         <h id="side-menu-title"></h>
     </div>
     <div class='list' id='list'></div>
+
     <template id="list-item-template">
         <div class="list-item">
             <img alt="" src="">
@@ -28,6 +38,7 @@
             </p>
         </div>
     </template>
+
 </div>
 </body>
 
