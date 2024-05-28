@@ -1,22 +1,22 @@
 
 function DrawContextMenu(e) {
-	$("cx-menu").css("visibility", "visible");
-	$("cx-menu").css({left:e.pageX, top:e.pageY});
-	var i = ($(e.target).parent()).attr("id");
+	document.querySelector("cx-menu").style.visibility = "visible";
+	document.querySelector("cx-menu").style.left = e.pageX + "px";
+	document.querySelector("cx-menu").style.top = e.pageY + "px";
+	var i = e.target.parentElement.id;
 }
-
 
 
 function Rename(e){
 	console.log('rf');
 }
 
-
-
-function ActivateContextMenu(){
-  $("cx-menu").load("context_menu.html");
-  $("#Rename").click(function ()
-	{	chrome.tabs.update(null, {url: 'https://translate.google.ru/?hl=ru' }); });
+function ActivateContextMenu() {
+	let menu = document.querySelector("cx-menu");
+	let rename = document.getElementById("Rename");
+	rename.addEventListener("click", function(e) {
+		Rename(e);
+	});
 }
 
 ActivateContextMenu();

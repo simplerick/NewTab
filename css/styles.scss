@@ -194,6 +194,12 @@ figure.item {
     box-shadow: 0px 0px 6px 2px #5C6DFF;
   }
 
+  &.bookmark {
+    .point {
+      visibility: hidden;
+    }
+  }
+
 
   figcaption {
   overflow: hidden;
@@ -206,6 +212,10 @@ figure.item {
     transition-delay: 0s;
     color: $text_color_hover;
     text-shadow: 0px 0px 5px rgba($text_color, 0.8);
+  }
+
+  img {
+    transition-duration: 0.07s;
   }
 }
 

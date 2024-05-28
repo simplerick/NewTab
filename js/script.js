@@ -22,9 +22,9 @@ Want: d1 ~ d2 in menu-open state ==> d1=d2=d; (d1<=d2) ==> c1 = min integer > sq
 l^2 = k*d1*d2=k*a*w*h/c1/c2.
  */
 
+let startTime = performance.now();
 
-// var w = $("body").width(); //1366
-// var h = $("body").height();
+
 let w = document.body.clientWidth;
 let h = document.body.clientHeight;
 let a = 0.72;
@@ -34,8 +34,8 @@ let maxfs = 15;
 let GridAnimation = true; // increase icon on hover
 let Caption = true; // presence of captions
 let BgCaption = true; // background of caption
-let ListAnimation = false; // draw list items in the side menu gradually
-let LightSpot = false; // highlight folder icons
+let ListAnimation = true; // draw list items in the side menu gradually
+let LightSpot = true; // highlight folder icons
 // let BlurAnimation = true; Add later (see last in styles.scss)
 
 
@@ -95,12 +95,12 @@ function CreateGrid(Bookmarks){
 		if(Bookmark.children) {
 			img.src = `icon/${Bookmark.title}.svg`
 			img.onerror = () => {img.src = "icon/default/folder.svg"};
-			img.class = "folder";
+			figure.classList.add("folder");
 			figure.onclick = ToggleMenu(Bookmark);
 		} else {
 			img.src = `icon/${(new URL(Bookmark.url)).hostname}.svg`;
 			img.onerror = () => {img.src = "icon/default/bookmark.svg"};
-			img.class = "bookmark";
+			figure.classList.add("bookmark");
 			figure.onclick = Transition(Bookmark);
 		}
 		figure.oncontextmenu = (e) => {
@@ -125,39 +125,36 @@ function CreateHtml(Tree) {
 	CreateGrid(Bookmarks);
 
 	document.querySelector("#side-menu > .plus-btn").onclick = ToggleMenu();
-
-	$("body").click(function (e) {
-		if ($(e.target).is("div.container") || $(e.target).is("body.window")) {
+	document.body.addEventListener("click", function (e) {
+		if (e.target.matches("div.container") || e.target.matches("body.window")) {
 			ToggleMenu()();
 		}
-		if (!$(e.target).is("cx-menu"))
-			$("cx-menu").css("visibility", "hidden");
+		if (!e.target.matches("cx-menu"))
+			document.querySelector("cx-menu").style.visibility = "hidden";
 	});
 
+	let container = document.querySelector(".container");
 	if (GridAnimation) {
-	$(".container").css("grid-template-columns", "repeat("+c1+",1fr)"); // grid properties
-	$(".container").css("grid-template-rows", "repeat("+c2+",1fr)");
-	$(".container").css("height", "90vh");
-	$(".container").css("margin", "auto");
-	$("figure.item > img").hover(
-		function() {
-			$(this).animate({
-				width: 1.2*l,
-				height: 1.2*l
-			}, 100);},
-		function() {
-			$(this).stop(true);
-			$(this).animate({
-				width: l,
-				height: l
-			}, 100);}
-	);
+		container.style.gridTemplateColumns = `repeat(${c1}, 1fr)`; // grid properties
+		container.style.gridTemplateRows = `repeat(${c2}, 1fr)`;
+		container.style.height = "90vh";
+		container.style.margin = "auto";
+		let grid_icons = document.querySelectorAll("figure.item > img");
+		grid_icons.forEach((grid_icon) => {
+			grid_icon.addEventListener("mouseover", function() {
+				grid_icon.style.width = 1.2*l + "px";
+				grid_icon.style.height = 1.2*l + "px";
+			});
+			grid_icon.addEventListener("mouseout", function() {
+				grid_icon.style.width = l + "px";
+				grid_icon.style.height = l + "px";
+			});
+		});
 	} else {
-	$(".container").css("grid-template-columns", "repeat("+c1+", auto)"); // grid properties
-	$(".container").css("grid-template-rows", "repeat("+c2+", auto)");
+		container.style.gridTemplateColumns = `repeat(${c1}, auto)`; // grid properties
+		container.style.gridTemplateRows = `repeat(${c2}, auto)`;
 	}
 }
-
 
 function SetStyles(size, Caption, LightSpot, BgCaption, ListAnimation, BlurAnimation) {
 	let grid_item = document.getElementById("grid-item-template").content.querySelector("figure");
@@ -172,7 +169,7 @@ function SetStyles(size, Caption, LightSpot, BgCaption, ListAnimation, BlurAnima
 		}
 	}
 	if(LightSpot) {
-		grid_item.querySelector(".point").classList.remove("hidden");
+		grid_item.querySelector("div.point").classList.remove("hidden");
 	}
 	if(ListAnimation) {
 		document.querySelector("div.menu > div.list").classList.add("list-animation");
@@ -183,3 +180,10 @@ function SetStyles(size, Caption, LightSpot, BgCaption, ListAnimation, BlurAnima
 
 chrome.bookmarks.getTree(CreateHtml);
 chrome.bookmarks.onChanged.addListener(() => {chrome.bookmarks.getTree(CreateHtml);});
+
+
+window.onload = function() {
+    let endTime = performance.now();
+    let timeTaken = endTime - startTime;
+    console.log("Page load time is " + timeTaken + " milliseconds.");
+}
